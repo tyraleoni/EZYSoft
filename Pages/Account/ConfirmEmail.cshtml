@@ -1,0 +1,29 @@
+@page
+@model WebApplication1.Pages.Account.ConfirmEmailModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-elevated p-4">
+        @if (Model.Success)
+                {
+   <div class="alert alert-success">
+         <h4 class="alert-heading">? Email Confirmed</h4>
+        <p>@Model.Message</p>
+            <hr />
+        <p class="mb-0">You can now <a asp-page="/Account/Login" class="alert-link">login to your account</a>.</p>
+ </div>
+     }
+        else
+     {
+   <div class="alert alert-danger">
+             <h4 class="alert-heading">? Confirmation Failed</h4>
+     <p>@Model.Message</p>
+   <hr />
+          <p class="mb-0">If your link has expired, you can <a asp-page="/Account/ResendConfirmationEmail" class="alert-link">request a new confirmation email</a>.</p>
+             </div>
+         }
+</div>
+        </div>
+    </div>
+</div>

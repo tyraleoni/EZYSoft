@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>@ViewData["Title"] - Ace Job Agency</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+ <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+ <header>
+ <nav class="navbar navbar-expand-lg navbar-custom shadow-sm">
+ <div class="container">
+ <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/Index">
+ <span class="brand-mark">ACE</span>
+ <span class="ms-2">Ace Job Agency</span>
+ </a>
+ <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+ <span class="navbar-toggler-icon"></span>
+ </button>
+
+ <div class="collapse navbar-collapse" id="mainNav">
+ <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+ <li class="nav-item">
+ <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
+ </li>
+ <li class="nav-item">
+ <a class="nav-link" href="#features">Features</a>
+ </li>
+ <li class="nav-item d-lg-none">
+ <a class="nav-link" asp-area="" asp-page="/Register">Register</a>
+ </li>
+ @if (User.Identity.IsAuthenticated)
+ {
+ <li class="nav-item dropdown">
+ <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="ms-2">Account</span>
+ </a>
+ <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+ <li><a class="dropdown-item" asp-page="/Account/Profile">My Profile</a></li>
+ <li><a class="dropdown-item" asp-page="/Account/ChangePassword">Change Password</a></li>
+ <li><hr class="dropdown-divider"></li>
+ <li><a class="dropdown-item" asp-page="/Account/Logout">Logout</a></li>
+ </ul>
+ </li>
+ }
+ else
+ {
+ <li class="nav-item">
+ <a class="nav-link" asp-area="" asp-page="/Account/Login">Login</a>
+ </li>
+ <li class="nav-item d-none d-lg-block">
+ <a class="btn btn-outline-light ms-3" asp-area="" asp-page="/Register">Get Started</a>
+ </li>
+ }
+ </ul>
+ </div>
+ </div>
+ </nav>
+ </header>
+
+ <main class="container-fluid px-0">
+ <div class="container py-4">
+ @RenderBody()
+ </div>
+ </main>
+
+ <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+ <footer class="footer border-top mt-5">
+ <div class="container py-3 d-flex justify-content-between align-items-center">
+ <div class="small">&copy; @DateTime.UtcNow.Year - Ace Job Agency</div>
+ <div class="small">Membership Service</div>
+ </div>
+ </footer>
+
+ <script src="~/lib/jquery/dist/jquery.min.js"></script>
+ <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="~/js/site.js" asp-append-version="true"></script>
+
+ @await RenderSectionAsync("Scripts", required: false)
+
+ <script>
+ // Smooth scroll for anchor links
+ document.addEventListener('DOMContentLoaded', function () {
+ document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+ anchor.addEventListener('click', function (e) {
+ e.preventDefault();
+ var target = document.querySelector(this.getAttribute('href'));
+ if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ });
+ });
+ });
+ </script>
+</body>
+</html>

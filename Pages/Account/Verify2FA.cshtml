@@ -1,0 +1,18 @@
+@page
+@model WebApplication1.Pages.Account.Verify2FAModel
+@{
+}
+
+<div class="container mt-5">
+ <h2>Two-Factor Verification</h2>
+ <form method="post">
+ <div asp-validation-summary="All" class="text-danger"></div>
+ <div class="mb-3">
+ <label class="form-label">Authenticator Code</label>
+ <input asp-for="Code" class="form-control" />
+ </div>
+ <div class="mb-3">
+ <button type="submit" class="btn btn-primary">Verify</button>
+ </div>
+ </form>
+</div>

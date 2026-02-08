@@ -1,0 +1,29 @@
+@page "{code:int}"
+@model WebApplication1.Pages.StatusCode.IndexModel
+@{
+ ViewData["Title"] = "Error";
+}
+
+<div class="container mt-4">
+ <div class="row">
+ <div class="col-md-8 offset-md-2">
+ <h1 class="text-danger">Error @Model.Code</h1>
+ <p>@Model.Message</p>
+
+ @if (Model.Code ==404)
+ {
+ <p>The page you are looking for could not be found.</p>
+ }
+ else if (Model.Code ==403)
+ {
+ <p>You do not have permission to view this resource.</p>
+ }
+ else
+ {
+ <p>An unexpected error occurred. Please contact support if the problem persists.</p>
+ }
+
+ <p><a asp-page="/Index">Return to home</a></p>
+ </div>
+ </div>
+</div>

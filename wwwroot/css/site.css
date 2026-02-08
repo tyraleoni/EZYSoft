@@ -1,0 +1,333 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Dark theme using CSS variables */
+:root{
+ --bg:#000000; /* enforce pure black background */
+ --surface: rgba(255,255,255,0.03); /* translucent surface */
+ --card-shadow:012px36px rgba(2,6,23,0.6);
+ --primary:#14b8a6; /* teal */
+ --primary-600:#0e9f8f;
+ --accent:#ff7a59; /* coral accent */
+ --muted:#9aa6b2;
+ --glass: rgba(255,255,255,0.03);
+ --radius:12px;
+ --text:#e6f0f6;
+ --black:#000000;
+ --nav-bg-start: #052026; /* darker cyan start */
+ --nav-bg-end: #07313a; /* darker cyan end */
+ --nav-text: #eafff9; /* navbar text color */
+}
+
+html, body{
+ height:100%;
+ margin:0;
+ /* solid black background to ensure full-page black */
+ background: var(--bg) fixed;
+ color:var(--text);
+ font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+ -webkit-font-smoothing:antialiased;
+ -moz-osx-font-smoothing:grayscale;
+}
+
+/* ensure body container occupies full width with black gutters */
+.container{max-width:1100px}
+
+/* NAVBAR */
+.navbar-custom {
+ background: linear-gradient(90deg, var(--nav-bg-start), var(--nav-bg-end)) !important;
+ border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.navbar{transition:all .22s ease;padding:14px0;border-bottom:1px solid rgba(255,255,255,0.03);background:transparent}
+.navbar-shrink{padding:8px0;backdrop-filter: blur(6px);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:010px30px rgba(2,6,23,0.6)}
+.navbar .brand-mark{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:36px;padding:6px10px;border-radius:10px;background:linear-gradient(180deg, #17c3b2, #0ea390);color:#021017;font-weight:800;font-size:0.95rem;letter-spacing:0.6px;box-shadow:06px18px rgba(14,159,143,0.12);border:1px solid rgba(255,255,255,0.06)}
+.navbar .navbar-brand span{font-weight:700;color:var(--nav-text) !important;margin-left:10px}
+.navbar .nav-link{color:var(--nav-text) !important;margin-left:12px}
+.navbar .nav-link:hover, .navbar .nav-link:focus{color:#bff7ef !important}
+.navbar .btn-outline-light{color:var(--nav-text) !important;border-color:rgba(255,255,255,0.12) !important;background:rgba(255,255,255,0.02);padding:8px12px;border-radius:8px}
+.navbar .btn-outline-light:hover { background: rgba(255,255,255,0.04);}
+
+/* HERO */
+.hero{padding:38px;border-radius:var(--radius);background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:var(--card-shadow);}
+.hero h1{font-size:2rem;margin-bottom:8px;color:var(--text)}
+.hero .lead{color:var(--muted);margin-bottom:18px}
+
+/* CARDS */
+.card-elevated{border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:var(--card-shadow);border:1px solid rgba(255,255,255,0.03)}
+.card-body{padding:18px}
+
+/* SPEC BOX */
+.spec-box{border-radius:10px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008));border:1px solid rgba(255,255,255,0.03)}
+.spec-title{font-size:1.05rem;font-weight:700;color:var(--primary)}
+.spec-list{margin-left:18px;color:var(--text)}
+.highlight-green{background:linear-gradient(90deg, rgba(20,80,73,0.12), rgba(20,184,166,0.08));padding:4px8px;border-radius:6px;color:#bff3ea}
+.highlight-yellow{background:linear-gradient(90deg, rgba(255,196,139,0.07), rgba(255,197,115,0.06));padding:4px8px;border-radius:6px;color:#ffe7d9}
+.spec-footer{margin-top:12px;color:var(--muted);font-size:0.95rem}
+
+/* FORMS */
+.form-control{border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.01);color:var(--text);}
+.form-control::placeholder{color:rgba(230,240,246,0.25)}
+.form-control:focus{outline:none;box-shadow:08px30px rgba(20,184,166,0.06);border-color:var(--primary-600)}
+.form-label{font-weight:600;color:var(--text)}
+
+/* BUTTONS */
+.btn-primary{background:linear-gradient(180deg,var(--primary),var(--primary-600));border:none;border-radius:10px;padding:10px16px;color:#021017;font-weight:700;box-shadow:010px26px rgba(6,30,27,0.15)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-outline-secondary{background:transparent;border-radius:10px;padding:9px14px;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+
+/* PASSWORD METER */
+.pw-wrap{margin-top:8px}
+.progress{height:10px;border-radius:999px;background:rgba(255,255,255,0.02);overflow:hidden}
+.progress-bar{transition:width .32s ease}
+.pw-label{font-size:0.9rem;margin-top:8px;color:var(--muted)}
+
+/* REVEAL ANIMATIONS */
+.reveal-on-scroll{opacity:0;transform:translateY(14px);transition:all .6s cubic-bezier(.2,.8,.2,1)}
+.reveal-on-scroll.revealed{opacity:1;transform:none}
+
+/* TOAST */
+#toast-container{position:fixed;right:20px;bottom:20px;z-index:1200}
+.app-toast{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:10px;padding:12px14px;box-shadow:012px36px rgba(2,6,23,0.6);margin-top:10px;transform:translateY(6px);opacity:0;transition:all .2s ease;border-left:4px solid rgba(255,255,255,0.02)}
+.app-toast.visible{transform:none;opacity:1}
+.app-toast-info{border-left-color:var(--primary)}
+.app-toast-success{border-left-color:#1db954}
+.app-toast-error{border-left-color:var(--accent)}
+
+/* SMALL SCREEN */
+@media (max-width:768px){
+ .hero{padding:20px}
+ .container{padding:014px}
+ .spec-box{margin-bottom:14px}
+}
+
+/* Accessibility tweaks */
+.form-text{color:var(--muted)}
+.text-muted-2{color:#8f9aa6}
+
+/* helpers */
+a{color:var(--primary)}
+a:hover{color:var(--primary-600)}
+
+/* Ensure full black background and override Bootstrap light classes for a consistent dark theme */
+:root{ --black:#000000; }
+
+html, body {
+ background-color: var(--black) !important;
+ color: #e6f0f6;
+}
+
+/* override Bootstrap utility .bg-light if used in templates */
+.bg-light {
+ background-color: transparent !important;
+ color: inherit !important;
+}
+
+/* ensure containers are transparent so black background shows through */
+.container, .container-fluid {
+ background: transparent !important;
+}
+
+/* Footer override */
+.footer {
+ background: transparent !important;
+ border-top-color: rgba(255,255,255,0.04) !important;
+}
+
+/* Darken cards, hero and spec box so they blend with black background */
+.card, .card-elevated, .hero, .spec-box {
+ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
+ border:1px solid rgba(255,255,255,0.03) !important;
+}
+
+/* Make form controls darker and fully opaque to match black background */
+.form-control {
+ background: rgba(255,255,255,0.02) !important;
+ border:1px solid rgba(255,255,255,0.04) !important;
+ color: #e6f0f6 !important;
+}
+.form-control:focus {
+ background: rgba(255,255,255,0.02) !important;
+}
+
+/* Buttons contrast on black background */
+.btn-primary {
+ box-shadow:010px26px rgba(6,30,27,0.18) !important;
+}
+
+/* Ensure any white page gutters are removed */
+body, html, .page, #main {
+ background: var(--black) !important;
+}
+
+/* Progress and meter colors remain visible */
+.progress{ background: rgba(255,255,255,0.02) !important; }
+.progress-bar.bg-danger { background-color: #ff4d4f !important; }
+.progress-bar.bg-warning { background-color: #f59e0b !important; }
+.progress-bar.bg-success { background-color: #22c55e !important; }
+
+/* Misc overrides for Bootstrap classes that may inject white backgrounds */
+.card-body, .modal-content, .panel, .panel-body {
+ background: transparent !important;
+}
+
+/* Make links and small text readable */
+a, .nav-link { color: var(--primary) !important; }
+.small, .text-muted, .form-text { color: rgba(230,240,246,0.65) !important; }
+
+/* Accessibility: ensure focus outlines remain visible */
+.btn:focus, .form-control:focus { box-shadow:0003px rgba(20,184,166,0.12) !important; }
+
+/* Brand and navbar readability tweaks */
+.navbar-custom, .navbar {
+ background: rgba(0,0,0,0.55) !important; /* slightly translucent dark */
+ border-bottom:1px solid rgba(255,255,255,0.03);
+}
+
+.navbar .brand-mark{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ min-width:44px;
+ height:36px;
+ padding:6px10px;
+ border-radius:10px;
+ background: linear-gradient(180deg, #17c3b2, #0ea390);
+ color:#021017 !important; /* ensure brand text is white for contrast */
+ font-weight:800;
+ font-size:0.95rem;
+ letter-spacing:0.6px;
+ box-shadow:06px18px rgba(14,159,143,0.12);
+ border:1px solid rgba(255,255,255,0.06);
+ margin-right:8px;
+}
+
+.navbar .navbar-brand span{
+ font-weight:700;
+ color: var(--nav-text) !important; /* light label for brand name */
+ margin-left:10px;
+}
+
+/* Nav links: slightly muted but readable */
+.navbar .nav-link{
+ color: var(--nav-text) !important;
+ margin-left:12px;
+}
+.navbar .nav-link:hover, .navbar .nav-link:focus{
+ color: #bff7ef !important;
+}
+
+/* Get Started / CTA in navbar should be high contrast */
+.btn-outline-light {
+ color: var(--nav-text) !important;
+ border-color: rgba(255,255,255,0.12) !important;
+ background: rgba(255,255,255,0.02);
+ padding:8px12px;
+ border-radius:8px;
+}
+.btn-outline-light:hover {
+ background: rgba(255,255,255,0.04);
+}
+
+/* Primary button (hero) readability */
+.btn-primary{
+ background: linear-gradient(180deg,var(--primary),var(--primary-600)) !important;
+ color: #ffffff !important; /* ensure white text */
+ border:none !important;
+ box-shadow:010px26px rgba(6,30,27,0.18) !important;
+}
+.btn-primary:focus, .btn-primary:hover{
+ color:#ffffff !important;
+ text-decoration: none;
+}
+
+/* Make sure small dark buttons (Login) are visible */
+.btn-dark-ghost{
+ color: #cfe8e3;
+ border:1px solid rgba(255,255,255,0.04);
+ background: transparent;
+ padding:8px12px;
+ border-radius:8px;
+}
+.btn-dark-ghost:hover{ background: rgba(255,255,255,0.02); color:#ffffff }
+
+/* Increase navbar spacing for clarity */
+.navbar { padding-top:12px; padding-bottom:12px; }
+
+/* Make hero CTA area buttons consistent */
+.hero .btn { margin-right:8px; }
+/* Navbar color and brand badge refinements - updated to indigo gradient */
+:root {
+ --nav-bg-start: #3b0d9b; /* deep indigo start */
+ --nav-bg-end: #2b0a6f; /* deep indigo end */
+ --nav-text: #eafff9; /* navbar text color */
+}
+
+/* Apply a distinct navbar background using the new variables */
+.navbar-custom {
+ background: linear-gradient(90deg, var(--nav-bg-start), var(--nav-bg-end)) !important;
+ border-bottom:1px solid rgba(255,255,255,0.04);
+}
+
+/* Brand badge 'ACE' styled as a pill / rounded square for visibility */
+.navbar .brand-mark {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ min-width:44px;
+ height:36px;
+ padding:6px10px;
+ border-radius:10px;
+ background: linear-gradient(180deg, #7c3aed, #5b21b6); /* purple -> darker purple */
+ color: #ffffff !important;
+ font-weight:800;
+ font-size:0.95rem;
+ letter-spacing:0.6px;
+ box-shadow:06px18px rgba(79,70,229,0.12);
+ border:1px solid rgba(255,255,255,0.06);
+}
+
+.navbar .navbar-brand span {
+ font-weight:700;
+ color: var(--nav-text) !important;
+ margin-left:10px;
+}
+
+.navbar .nav-link {
+ color: var(--nav-text) !important;
+ margin-left:12px;
+}
+.navbar .nav-link:hover, .navbar .nav-link:focus {
+ color: #dbeafe !important;
+}
+
+.btn-outline-light {
+ color: var(--nav-text) !important;
+ border-color: rgba(255,255,255,0.12) !important;
+ background: rgba(255,255,255,0.02);
+ padding:8px12px;
+ border-radius:8px;
+}
+
+.btn-outline-light:hover {
+ background: rgba(255,255,255,0.04);
+}

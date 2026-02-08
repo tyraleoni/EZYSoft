@@ -1,0 +1,23 @@
+@page
+@model WebApplication1.Pages.Account.RegisterConfirmationModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-elevated p-4">
+    <div class="alert alert-info">
+     <h4 class="alert-heading">?? Check Your Email</h4>
+        <p>We've sent a confirmation email to <strong>@Model.Email</strong></p>
+         <hr />
+      <p class="mb-2">Please click the link in the email to confirm your email address and activate your account.</p>
+    <p class="mb-0"><small class="text-muted">If you don't see the email, check your spam/junk folder.</small></p>
+       </div>
+       <div class="mt-4">
+         <p class="text-center text-muted">
+   <small>Already confirmed? <a asp-page="/Account/Login">Login here</a></small>
+             </p>
+         </div>
+      </div>
+        </div>
+    </div>
+</div>

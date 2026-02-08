@@ -1,0 +1,79 @@
+﻿@page
+@model IndexModel
+@{
+ ViewData["Title"] = "Home";
+}
+
+<section class="hero mb-4 reveal-on-scroll">
+ <div class="row align-items-center">
+ <div class="col-md-7">
+ <h1 class="mb-3">Ace Job Agency</h1>
+ <p class="lead">Membership Service — secure registration and profile management. Strong password policy,2FA, encrypted NRIC, and resume upload support.</p>
+ <p>
+ @if (User.Identity.IsAuthenticated)
+ {
+ <a class="btn btn-primary me-2" asp-page="/Index">Dashboard</a>
+ <a class="btn btn-outline-secondary" asp-page="/Account/ChangePassword">Change Password</a>
+ }
+ else
+ {
+ <a class="btn btn-primary me-2" asp-page="/Register">Get Started</a>
+ <a class="btn btn-outline-secondary" asp-page="/Account/Login">Login</a>
+ }
+ </p>
+ </div>
+ <div class="col-md-5 d-none d-md-block">
+ <div class="card card-elevated p-3 reveal-on-scroll">
+ <div class="card-body">
+ <h5>Your account</h5>
+ @if (User.Identity.IsAuthenticated)
+ {
+ <p><strong>Name:</strong> @Html.Encode(Model.DisplayName)</p>
+ <p><strong>Email:</strong> @Html.Encode(Model.Email)</p>
+ @if (!string.IsNullOrEmpty(Model.NRICEncrypted))
+ {
+ <p><strong>NRIC (masked):</strong> @Html.Encode(Model.NRICDecrypted)</p>
+ }
+ }
+ else
+ {
+ <p>Register to see secure profile features.</p>
+ }
+ </div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<section id="features" class="mb-4">
+ <div class="row g-3">
+ <div class="col-md-4 reveal-on-scroll">
+ <div class="card card-elevated p-3">
+ <div class="card-body">
+ <h5>🔒 Secure Auth</h5>
+ <p class="text-muted-2">Strong password policy, lockout, and auditable login events.</p>
+ </div>
+ </div>
+ </div>
+ <div class="col-md-4 reveal-on-scroll">
+ <div class="card card-elevated p-3">
+ <div class="card-body">
+ <h5>🔐2FA</h5>
+ <p class="text-muted-2">Authenticator app (TOTP) flows for extra security.</p>
+ </div>
+ </div>
+ </div>
+ <div class="col-md-4 reveal-on-scroll">
+ <div class="card card-elevated p-3">
+ <div class="card-body">
+ <h5>🛡️ Privacy</h5>
+ <p class="text-muted-2">NRIC encrypted at rest and masked in UI. Resume uploads stored securely.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<footer class="text-center small text-muted">
+ Ace Job Agency — Membership Service
+</footer>

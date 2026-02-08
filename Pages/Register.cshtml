@@ -1,0 +1,211 @@
+﻿@page
+@model WebApplication1.Pages.RegisterModel
+
+<div class="row">
+ <div class="col-md-5">
+ <div class="spec-box mb-3">
+ <h3 class="spec-title">Company Name: <span class="highlight-green">Ace Job Agency</span></h3>
+ <p class="mb-2"><span class="highlight-green">Membership Service</span></p>
+ <p>Membership Registration Form should consist of the following input fields:</p>
+ <ul class="spec-list">
+ <li>First Name</li>
+ <li>Last Name</li>
+ <li>Gender</li>
+ <li>NRIC <span class="note"><span class="highlight-yellow">(Must be encrypted)</span></span></li>
+ <li>Email address <span class="note"><span class="highlight-yellow">(Must be unique)</span></span></li>
+ <li>Password</li>
+ <li>Confirm Password</li>
+ <li>Date of Birth</li>
+ <li>Resume <span class="note">(<span class="highlight-yellow">.docx or .pdf file</span>)</span></li>
+ <li>Who Am I <span class="note"><span class="highlight-yellow">(allow all special chars)</span></span></li>
+ </ul>
+ <div class="spec-footer">Follow the highlights for required security considerations.</div>
+ </div>
+ </div>
+
+ <div class="col-md-7">
+ <div class="card card-elevated p-3">
+ <h2 class="mb-3">Register</h2>
+ <form id="registerForm" method="post" enctype="multipart/form-data" novalidate>
+ @Html.AntiForgeryToken()
+ <input type="hidden" id="g-recaptcha-response" name="RecaptchaToken" />
+ <div asp-validation-summary="All" class="text-danger"></div>
+
+ <div id="recaptcha-warning" class="alert alert-warning" style="display: none;">
+ reCAPTCHA is disabled or not configured. Submissions may bypass bot checks (development mode).
+ </div>
+
+ <div class="row">
+ <div class="col-md-6 mb-3">
+ <label class="form-label" asp-for="RModel.FirstName">First Name</label>
+ <input type="text" asp-for="RModel.FirstName" class="form-control" maxlength="100" pattern="[A-Za-z\s'-]+" />
+ <span asp-validation-for="RModel.FirstName" class="text-danger"></span>
+ </div>
+ <div class="col-md-6 mb-3">
+ <label class="form-label" asp-for="RModel.LastName">Last Name</label>
+ <input type="text" asp-for="RModel.LastName" class="form-control" maxlength="100" pattern="[A-Za-z\s'-]+" />
+ <span asp-validation-for="RModel.LastName" class="text-danger"></span>
+ </div>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label" asp-for="RModel.Gender">Gender</label>
+ <select asp-for="RModel.Gender" class="form-select">
+ <option value="">Select...</option>
+ <option>Male</option>
+ <option>Female</option>
+ <option>Other</option>
+ </select>
+ <span asp-validation-for="RModel.Gender" class="text-danger"></span>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label" asp-for="RModel.NRIC">NRIC</label>
+ <input type="text" asp-for="RModel.NRIC" class="form-control" maxlength="20" pattern="[A-Za-z0-9-]+" />
+ <div class="form-text">NRIC will be encrypted in the database.</div>
+ <span asp-validation-for="RModel.NRIC" class="text-danger"></span>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label" asp-for="RModel.Email">Email Address</label>
+ <input type="email" asp-for="RModel.Email" class="form-control" />
+ <span asp-validation-for="RModel.Email" class="text-danger"></span>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label" asp-for="RModel.Password">Password</label>
+ <input type="password" asp-for="RModel.Password" id="regPassword" class="form-control" />
+ <span asp-validation-for="RModel.Password" class="text-danger"></span>
+ <div class="form-text">Password must be at least12 characters and include upper, lower, number, and special character.</div>
+ <div class="progress mt-2 pw-wrap" style="height:8px;">
+ <div id="regPwStrength" class="progress-bar" role="progressbar" style="width:0%"></div>
+ </div>
+ <small id="regPwFeedback" class="form-text text-muted"></small>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label" asp-for="RModel.ConfirmPassword">Confirm Password</label>
+ <input type="password" asp-for="RModel.ConfirmPassword" class="form-control" />
+ <span asp-validation-for="RModel.ConfirmPassword" class="text-danger"></span>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label" asp-for="RModel.DateOfBirth">Date of Birth</label>
+ <input type="date" asp-for="RModel.DateOfBirth" class="form-control" />
+ <span asp-validation-for="RModel.DateOfBirth" class="text-danger"></span>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label">Resume (PDF or Word)</label>
+ <!-- ensure no required attribute is generated for the file input -->
+ <input id="ResumeFile" name="ResumeFile" type="file" class="form-control" accept=".pdf,.doc,.docx" />
+ <div class="form-text">Allowed types: .pdf, .doc, .docx</div>
+ </div>
+
+ <div class="mb-3">
+ <label class="form-label" asp-for="RModel.WhoAmI">Who Am I</label>
+ <textarea asp-for="RModel.WhoAmI" class="form-control" rows="4" maxlength="2000"></textarea>
+ <div class="form-text">You may include special characters; contents will be encoded when displayed.</div>
+ <span asp-validation-for="RModel.WhoAmI" class="text-danger"></span>
+ </div>
+
+ <div class="mb-3 d-flex justify-content-between align-items-center">
+ <button type="submit" class="btn btn-primary">Register</button>
+ <a class="text-muted small" asp-page="/Privacy">Privacy</a>
+ </div>
+ </form>
+ </div>
+ </div>
+</div>
+
+@section Scripts {
+ <partial name="_ValidationScriptsPartial" />
+ <script>
+ // Fetch reCAPTCHA configuration from API endpoint
+ async function initializeRecaptcha() {
+ try {
+ const response = await fetch('/api/RecaptchaConfig');
+ const config = await response.json();
+
+ if (!config.enabled) {
+ document.getElementById('recaptcha-warning').style.display = 'block';
+ return;
+ }
+
+ if (!config.siteKey) {
+ console.warn('reCAPTCHA site key not configured');
+ document.getElementById('recaptcha-warning').style.display = 'block';
+ return;
+ }
+
+ // Dynamically load reCAPTCHA script
+ const script = document.createElement('script');
+ script.src = `https://www.google.com/recaptcha/api.js?render=${config.siteKey}`;
+ script.async = true;
+ script.defer = true;
+ document.head.appendChild(script);
+
+ // Set up form submission handler
+ script.onload = function () {
+ const form = document.getElementById('registerForm');
+ if (!form) return;
+
+ form.addEventListener('submit', function (e) {
+ e.preventDefault();
+
+ if (typeof grecaptcha !== 'undefined' && grecaptcha && grecaptcha.execute) {
+ grecaptcha.ready(function () {
+ grecaptcha.execute(config.siteKey, { action: 'register' })
+ .then(function (token) {
+ const el = document.getElementById('g-recaptcha-response');
+ if (el) el.value = token;
+ form.submit();
+ })
+ .catch(function (err) {
+ console.error('reCAPTCHA token retrieval failed', err);
+ alert('reCAPTCHA failed to retrieve a token. Please try again.');
+ });
+ });
+ } else {
+ console.warn('grecaptcha not available');
+ alert('reCAPTCHA script not loaded. Ensure you are online and try again.');
+ }
+ });
+ };
+ } catch (error) {
+ console.error('Failed to load reCAPTCHA config:', error);
+ document.getElementById('recaptcha-warning').style.display = 'block';
+ }
+ }
+
+ // Initialize on page load
+ document.addEventListener('DOMContentLoaded', initializeRecaptcha);
+ </script>
+
+ <script>
+ function scorePassword(pw) {
+ var score =0;
+ if (!pw) return0;
+ if (pw.length >=12) score +=2; else score += Math.max(0, pw.length -6);
+ if (/[A-Z]/.test(pw)) score +=2;
+ if (/[a-z]/.test(pw)) score +=1;
+ if (/[0-9]/.test(pw)) score +=2;
+ if (/[^A-Za-z0-9]/.test(pw)) score +=3;
+ return Math.min(score,10);
+ }
+ var input = document.getElementById('regPassword');
+ var bar = document.getElementById('regPwStrength');
+ var feedback = document.getElementById('regPwFeedback');
+ if (input) {
+ input.addEventListener('input', function (e) {
+ var s = scorePassword(e.target.value);
+ var pct = Math.round((s /10) *100);
+ bar.style.width = pct + '%';
+ bar.className = 'progress-bar';
+ if (pct <40) { bar.classList.add('bg-danger'); feedback.textContent = 'Weak'; }
+ else if (pct <70) { bar.classList.add('bg-warning'); feedback.textContent = 'Fair'; }
+ else { bar.classList.add('bg-success'); feedback.textContent = 'Strong'; }
+ });
+ }
+ </script>
+}
