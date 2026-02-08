@@ -69,6 +69,17 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Redirect root path to home page
+app.Use(async (context, next) =>
+{
+ if (context.Request.Path == "/")
+ {
+ context.Response.Redirect("/Index");
+ return;
+ }
+ await next();
+});
+
 // Provide custom status code pages (404,403, etc.)
 app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
 

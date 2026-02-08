@@ -43,7 +43,7 @@ namespace WebApplication1.Pages.Account
  _db.AuditLogs.Add(new AuditLog { UserId = user.Id, Action = "Login2FASuccess", Timestamp = DateTime.UtcNow });
  await _db.SaveChangesAsync();
 
- return RedirectToPage("/Index");
+ return RedirectToPage("/Account/Profile");
  }
  }
 }

@@ -28,7 +28,12 @@ namespace WebApplication1.Pages.Account
  {
  if (string.IsNullOrEmpty(Email)) { ModelState.AddModelError(string.Empty, "Email required"); return Page(); }
  var user = await _userManager.FindByEmailAsync(Email);
- if (user == null) { Message = "If the email exists, a reset link has been sent."; return Page(); }
+ if (user == null)
+ {
+ // Don't reveal whether email exists - show generic message
+ Message = "If an account with that email exists, a reset link has been sent.";
+ return Page();
+ }
 
  var token = await _userManager.GeneratePasswordResetTokenAsync(user);
  var resetUrl = Url.Page("/Account/ResetPassword", null, new { userId = user.Id, token = token }, Request.Scheme);
@@ -40,7 +45,8 @@ namespace WebApplication1.Pages.Account
  _db.AuditLogs.Add(new AuditLog { UserId = user.Id, Action = "PasswordResetRequested", Timestamp = DateTime.UtcNow });
  await _db.SaveChangesAsync();
 
- Message = $"If the email exists, a reset link has been sent to {Email}.";
+ // Show same message regardless of whether user exists (prevents account enumeration)
+ Message = "If an account with that email exists, a reset link has been sent.";
  return Page();
  }
  }

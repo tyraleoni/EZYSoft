@@ -164,16 +164,16 @@ namespace WebApplication1.Pages
                     var emailBody = $@"
                     <html>
                     <body>
-                    <h2>Welcome to Ace Job Agency!</h2>
-                    <p>Please confirm your email address by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.</p>
-                    <p>Or copy this link: {HtmlEncoder.Default.Encode(callbackUrl)}</p>
-                    <p>If you did not register, please ignore this email.</p>
+                        <h2>Welcome to Ace Job Agency!</h2>
+                        <p>Your email verification code is: <strong>{token}</strong></p>
+                        <p>Or click here to verify: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Verify Email</a></p>
+                        <p>If you did not register, please ignore this email.</p>
                     </body>
                     </html>";
 
                     try
                     {
-                        await _emailService.SendEmailAsync(user.Email, "Confirm your email - Ace Job Agency", emailBody);
+                        await _emailService.SendEmailAsync(user.Email, "Verify Your Email - Ace Job Agency", emailBody);
                     }
                     catch (Exception ex)
                     {
@@ -182,8 +182,8 @@ namespace WebApplication1.Pages
                         await _db.SaveChangesAsync();
                     }
 
-                    // Redirect to email confirmation pending page instead of auto-signing in
-                    return RedirectToPage("/Account/RegisterConfirmation", new { email = user.Email });
+                    // Redirect to email verification page
+                    return RedirectToPage("/Account/VerifyEmailRegistration", new { email = user.Email, userId = user.Id });
                 }
                 foreach (var error in result.Errors)
                 {

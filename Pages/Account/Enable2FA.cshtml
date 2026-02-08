@@ -4,25 +4,56 @@
 }
 
 <div class="container mt-5">
- <h2>Enable Two-Factor Authentication (Authenticator App)</h2>
+ <div class="row justify-content-center">
+  <div class="col-md-6">
+   <div class="card">
+    <div class="card-header">
+     <h2 class="mb-0">Enable Two-Factor Authentication</h2>
+    </div>
+  <div class="card-body">
+     @if (Model.IsRequiredSetup)
+     {
+      <div class="alert alert-warning mb-4">
+       <strong>?? 2FA Required</strong><br />
+       Two-factor authentication is required before you can access your account.
+  </div>
+     }
 
- <div class="mb-3">
- <p>Scan this QR code into an authenticator app (or enter the key manually), then enter the code from the app to verify and enable2FA.</p>
- @if (Model.QrCodeImage != null)
- {
- <div><img src="@Model.QrCodeImage" alt="QR Code" /></div>
- }
- <p><strong>Manual entry key:</strong> <code>@Model.SharedKey</code></p>
- </div>
+     <p>Scan this QR code into an authenticator app (or enter the key manually), then enter the code from the app to verify and enable 2FA.</p>
 
- <form method="post">
- <div class="mb-3">
- <label class="form-label">Verification Code</label>
- <input asp-for="Code" class="form-control" />
- <span asp-validation-for="Code" class="text-danger"></span>
+     @if (Model.QrCodeImage != null)
+     {
+  <div class="text-center mb-4">
+       <img src="@Model.QrCodeImage" alt="QR Code" style="max-width: 250px; height: auto;" />
+      </div>
+     }
+
+     <div class="mb-3">
+   <p><strong>Manual entry key:</strong></p>
+      <code style="font-size: 16px; padding: 10px; background-color: #f5f5f5; display: block; word-break: break-all;">@Model.SharedKey</code>
+     </div>
+
+     <form method="post">
+      <input type="hidden" name="requiredSetup" value="@Model.IsRequiredSetup" />
+      <div class="mb-3">
+       <label class="form-label">Verification Code</label>
+       <input asp-for="Code" class="form-control form-control-lg" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric" />
+       <span asp-validation-for="Code" class="text-danger"></span>
+</div>
+      <div class="mb-3">
+    <button type="submit" class="btn btn-primary w-100">Enable 2FA</button>
+    </div>
+     </form>
+
+     @if (!Model.IsRequiredSetup)
+     {
+      <hr />
+      <p class="text-muted small text-center">
+       <a href="/Account/Profile">Back to Profile</a>
+      </p>
+     }
+    </div>
+   </div>
+  </div>
  </div>
- <div class="mb-3">
- <button type="submit" class="btn btn-primary">Enable2FA</button>
- </div>
- </form>
 </div>

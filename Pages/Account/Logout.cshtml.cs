@@ -31,6 +31,16 @@ namespace WebApplication1.Pages.Account
  }
 
  await _signInManager.SignOutAsync();
+ 
+ // Log the logout action
+ var user = await _signInManager.UserManager.GetUserAsync(User);
+ if (user != null)
+ {
+ _db.AuditLogs.Add(new AuditLog { UserId = user.Id, Action = "Logout", Timestamp = DateTime.UtcNow });
+ await _db.SaveChangesAsync();
+ }
+
+ // Redirect to home page
  return RedirectToPage("/Index");
  }
  }

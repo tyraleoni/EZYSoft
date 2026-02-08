@@ -56,28 +56,22 @@ namespace WebApplication1.Pages.Account
 
  if (result.Succeeded)
  {
+ // Check if 2FA is enabled
  if (await _userManager.GetTwoFactorEnabledAsync(user))
  {
- // require2FA: store temp user id and redirect
+ // 2FA is enabled: redirect to verification
  TwoFaUserId = user.Id;
  await _db.SaveChangesAsync();
  return RedirectToPage("/Account/Verify2FA");
  }
-
- // create session record similar to registration
- var sessionKey = Guid.NewGuid().ToString();
- var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
- var ua = Request.Headers["User-Agent"].ToString();
- var sess = new UserSession { UserId = user.Id, SessionKey = sessionKey, CreatedAt = DateTime.UtcNow, ExpiresAt = DateTime.UtcNow.AddMinutes(30), IpAddress = ip, UserAgent = ua, IsActive = true };
- _db.UserSessions.Add(sess);
- _db.AuditLogs.Add(new AuditLog { UserId = user.Id, Action = "LoginSuccess", Timestamp = DateTime.UtcNow });
- await _db.SaveChangesAsync();
-
- HttpContext.Session.SetString("SessionKey", sessionKey);
-
+ else
+ {
+ // 2FA is NOT enabled: sign in temporarily to allow setup, then redirect to enable 2FA
  await _signInManager.SignInAsync(user, isPersistent: false);
-
- return RedirectToPage("/Index");
+ _db.AuditLogs.Add(new AuditLog { UserId = user.Id, Action = "LoginAttemptWithout2FA", Timestamp = DateTime.UtcNow });
+ await _db.SaveChangesAsync();
+ return RedirectToPage("/Account/Enable2FA", new { requiredSetup = true });
+ }
  }
 
  if (result.IsLockedOut)

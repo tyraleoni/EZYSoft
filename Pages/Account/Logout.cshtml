@@ -1,6 +1,25 @@
 @page
 @model WebApplication1.Pages.Account.LogoutModel
+@{
+    ViewData["Title"] = "Logging out...";
+}
 
-<form method="post">
- <button type="submit" class="btn btn-link">Logout</button>
+<div class="container mt-5">
+    <div class="text-center">
+        <h3>Logging out...</h3>
+        <p class="text-muted">Please wait while you are logged out.</p>
+        <div class="spinner-border mt-3" role="status">
+         <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-submit the form on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+
+<form id="logoutForm" method="post" style="display: none;">
 </form>

@@ -1,0 +1,58 @@
+@page
+@model WebApplication1.Pages.Account.VerifyEmailRegistrationModel
+@{
+    ViewData["Title"] = "Verify Email";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+     <div class="card card-elevated p-4">
+        <h2 class="mb-4">Verify Your Email</h2>
+
+         @if (!string.IsNullOrEmpty(Model.Message))
+    {
+     var alertClass = Model.MessageType == "success" ? "alert-success" : "alert-danger";
+           <div class="alert @alertClass alert-dismissible fade show" role="alert">
+   @Model.Message
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         </div>
+                }
+
+            @if (Model.MessageType != "success")
+          {
+      <div class="alert alert-info mb-4">
+ <h5 class="alert-heading">?? Verify Your Email Address</h5>
+     <p class="mb-2">We've sent a verification code to <strong>@Model.Email</strong></p>
+      <p class="mb-0"><small class="text-muted">Check your email (including spam/junk folder) and enter the verification code below.</small></p>
+       </div>
+
+        <form method="post">
+          <div class="mb-3">
+         <label for="verificationCode" class="form-label">Verification Code</label>
+          <input type="text" class="form-control form-control-lg" id="verificationCode" name="verificationCode" 
+                placeholder="Enter the code from your email" required maxlength="100">
+       <small class="text-muted d-block mt-2">Or you can click the link in your email to verify automatically.</small>
+             </div>
+
+   <button type="submit" class="btn btn-primary w-100 mb-3">Verify Email</button>
+      </form>
+
+          <hr />
+
+     <div class="text-center">
+  <p class="text-muted mb-2"><small>Didn't receive the email?</small></p>
+         <a href="#" class="btn btn-sm btn-outline-secondary">Resend Verification Email</a>
+  </div>
+     }
+  else
+ {
+          <div class="alert alert-success">
+   <h5 class="alert-heading">? Email Verified!</h5>
+               <p>Your email has been successfully verified. You'll be redirected shortly...</p>
+        </div>
+         }
+</div>
+        </div>
+    </div>
+</div>
