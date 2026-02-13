@@ -40,8 +40,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
  options.Cookie.HttpOnly = true;
- options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
- options.SlidingExpiration = true;
+ // enforce1 minute max lifetime for authentication cookie
+ options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+ // do not allow sliding expiration so session cannot be extended
+ options.SlidingExpiration = false;
  options.LoginPath = "/Login";
 });
 
@@ -49,7 +51,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
- options.IdleTimeout = TimeSpan.FromMinutes(20);
+ // IdleTimeout changed to1 minute as requested
+ options.IdleTimeout = TimeSpan.FromMinutes(1);
  options.Cookie.HttpOnly = true;
  options.Cookie.IsEssential = true;
 });

@@ -36,23 +36,31 @@ namespace WebApplication1.Pages
 
             var user = await _userManager.GetUserAsync(User);
             var sessionKey = HttpContext.Session.GetString("SessionKey");
-            
+
             // If user is authenticated but no session key exists, create one
             if (string.IsNullOrEmpty(sessionKey))
             {
+                // Deactivate any other active sessions for this user (enforce single active session)
+                var others = _db.UserSessions.Where(x => x.UserId == user.Id && x.IsActive).ToList();
+                foreach (var o in others)
+                {
+                    o.IsActive = false;
+                }
+
                 // Create a new session for authenticated user
                 sessionKey = Guid.NewGuid().ToString();
                 var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
                 var ua = HttpContext.Request.Headers["User-Agent"].ToString();
-                var sess = new UserSession 
-                { 
-                    UserId = user.Id, 
-                    SessionKey = sessionKey, 
-                    CreatedAt = DateTime.UtcNow, 
-                    ExpiresAt = DateTime.UtcNow.AddMinutes(30), 
-                    IpAddress = ip, 
-                    UserAgent = ua, 
-                    IsActive = true 
+                var sess = new UserSession
+                {
+                    UserId = user.Id,
+                    SessionKey = sessionKey,
+                    CreatedAt = DateTime.UtcNow,
+                    // fixed1 minute lifetime
+                    ExpiresAt = DateTime.UtcNow.AddMinutes(1),
+                    IpAddress = ip,
+                    UserAgent = ua,
+                    IsActive = true
                 };
                 _db.UserSessions.Add(sess);
                 await _db.SaveChangesAsync();
@@ -65,16 +73,14 @@ namespace WebApplication1.Pages
                 // session invalid or expired
                 if (s != null)
                 {
-                    s.IsActive = false; 
+                    s.IsActive = false;
                     await _db.SaveChangesAsync();
                 }
                 await _signInManager.SignOutAsync();
                 return RedirectToPage("/Account/Logout");
             }
 
-            // session valid, extend sliding expiration
-            s.ExpiresAt = DateTime.UtcNow.AddMinutes(30);
-            await _db.SaveChangesAsync();
+            // Do NOT extend expiration. Sessions are fixed-length (1 minute).
             HttpContext.Session.SetString("SessionKey", s.SessionKey);
 
             // Count active session for user

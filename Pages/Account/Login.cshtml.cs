@@ -26,9 +26,6 @@ namespace WebApplication1.Pages.Account
 
  public string ErrorMessage { get; set; }
 
- [TempData]
- public string? TwoFaUserId { get; set; }
-
  public void OnGet()
  {
  }
@@ -56,17 +53,18 @@ namespace WebApplication1.Pages.Account
 
  if (result.Succeeded)
  {
- // Check if 2FA is enabled
+ // Check if2FA is enabled
  if (await _userManager.GetTwoFactorEnabledAsync(user))
  {
- // 2FA is enabled: redirect to verification
- TwoFaUserId = user.Id;
+ //2FA is enabled: redirect to verification
+ // store string id in TempData dictionary explicitly to ensure it's serialized as string
+ TempData["TwoFaUserId"] = user.Id?.ToString();
  await _db.SaveChangesAsync();
  return RedirectToPage("/Account/Verify2FA");
  }
  else
  {
- // 2FA is NOT enabled: sign in temporarily to allow setup, then redirect to enable 2FA
+ //2FA is NOT enabled: sign in temporarily to allow setup, then redirect to enable2FA
  await _signInManager.SignInAsync(user, isPersistent: false);
  _db.AuditLogs.Add(new AuditLog { UserId = user.Id, Action = "LoginAttemptWithout2FA", Timestamp = DateTime.UtcNow });
  await _db.SaveChangesAsync();

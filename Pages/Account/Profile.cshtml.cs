@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApplication1.Model;
 using WebApplication1.Services;
 using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace WebApplication1.Pages.Account
 {
@@ -14,50 +16,68 @@ namespace WebApplication1.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
         private readonly AuthDbContext _db;
+        private readonly IWebHostEnvironment _env;
 
         public ApplicationUser CurrentUser { get; set; }
-   public bool IsEmailConfirmed { get; set; }
+        public bool IsEmailConfirmed { get; set; }
         public string Message { get; set; }
 
- public ProfileModel(UserManager<ApplicationUser> userManager, IEmailService emailService, AuthDbContext db)
-   {
+        // Resume preview properties
+        public string? ResumeUrl { get; set; }
+        public bool ResumeIsPdf { get; set; }
+
+        public ProfileModel(UserManager<ApplicationUser> userManager, IEmailService emailService, AuthDbContext db, IWebHostEnvironment env)
+        {
             _userManager = userManager;
-        _emailService = emailService;
-_db = db;
+            _emailService = emailService;
+            _db = db;
+            _env = env;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-   CurrentUser = await _userManager.GetUserAsync(User);
-   if (CurrentUser == null)
-   {
-            return RedirectToPage("/Account/Login");
+            CurrentUser = await _userManager.GetUserAsync(User);
+            if (CurrentUser == null)
+            {
+                return RedirectToPage("/Account/Login");
             }
 
- IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(CurrentUser);
-         return Page();
+            // Compute resume URL if a file was uploaded
+            if (!string.IsNullOrEmpty(CurrentUser.ResumeFileName))
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath ?? "wwwroot", "uploads");
+                var localPath = Path.Combine(uploadsFolder, CurrentUser.ResumeFileName);
+                if (System.IO.File.Exists(localPath))
+                {
+                    ResumeUrl = "/uploads/" + CurrentUser.ResumeFileName;
+                    ResumeIsPdf = Path.GetExtension(CurrentUser.ResumeFileName).Equals(".pdf", System.StringComparison.OrdinalIgnoreCase);
+                }
+            }
+
+            IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(CurrentUser);
+            return Page();
         }
 
- public async Task<IActionResult> OnPostResendConfirmationEmailAsync()
+        public async Task<IActionResult> OnPostResendConfirmationEmailAsync()
         {
             CurrentUser = await _userManager.GetUserAsync(User);
-          if (CurrentUser == null)
-         {
-         return RedirectToPage("/Account/Login");
-      }
-
-       // Check if already confirmed
-      if (await _userManager.IsEmailConfirmedAsync(CurrentUser))
+            if (CurrentUser == null)
             {
-      Message = "Your email is already confirmed!";
-       IsEmailConfirmed = true;
-       return Page();
+                return RedirectToPage("/Account/Login");
             }
 
-        // Generate new confirmation token
-       var token = await _userManager.GenerateEmailConfirmationTokenAsync(CurrentUser);
-    var callbackUrl = Url.Page("/Account/ConfirmEmail", pageHandler: null, values: new { userId = CurrentUser.Id, code = token }, protocol: Request.Scheme);
-   
+            // Check if already confirmed
+            if (await _userManager.IsEmailConfirmedAsync(CurrentUser))
+            {
+                Message = "Your email is already confirmed!";
+                IsEmailConfirmed = true;
+                return Page();
+            }
+
+            // Generate new confirmation token
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(CurrentUser);
+            var callbackUrl = Url.Page("/Account/ConfirmEmail", pageHandler: null, values: new { userId = CurrentUser.Id, code = token }, protocol: Request.Scheme);
+
             var emailBody = $@"
 <html>
   <body>
@@ -69,21 +89,21 @@ _db = db;
 </html>";
 
             try
-  {
-    await _emailService.SendEmailAsync(CurrentUser.Email, "Confirm your email - Ace Job Agency", emailBody);
-      Message = "Confirmation email has been sent to " + CurrentUser.Email;
-   _db.AuditLogs.Add(new AuditLog { UserId = CurrentUser.Id, Action = "ResendConfirmationEmail", Timestamp = DateTime.UtcNow });
-         await _db.SaveChangesAsync();
+            {
+                await _emailService.SendEmailAsync(CurrentUser.Email, "Confirm your email - Ace Job Agency", emailBody);
+                Message = "Confirmation email has been sent to " + CurrentUser.Email;
+                _db.AuditLogs.Add(new AuditLog { UserId = CurrentUser.Id, Action = "ResendConfirmationEmail", Timestamp = DateTime.UtcNow });
+                await _db.SaveChangesAsync();
             }
-catch (Exception ex)
-       {
-        Message = "Failed to send confirmation email. Please try again later.";
+            catch (Exception ex)
+            {
+                Message = "Failed to send confirmation email. Please try again later.";
                 _db.AuditLogs.Add(new AuditLog { UserId = CurrentUser.Id, Action = "ResendConfirmationEmailFailed", Timestamp = DateTime.UtcNow });
-        await _db.SaveChangesAsync();
-   }
+                await _db.SaveChangesAsync();
+            }
 
-          IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(CurrentUser);
-   return Page();
+            IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(CurrentUser);
+            return Page();
         }
     }
 }

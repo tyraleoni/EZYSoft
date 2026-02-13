@@ -184,26 +184,26 @@
 
  <script>
  function scorePassword(pw) {
- var score =0;
- if (!pw) return0;
- if (pw.length >=12) score +=2; else score += Math.max(0, pw.length -6);
- if (/[A-Z]/.test(pw)) score +=2;
- if (/[a-z]/.test(pw)) score +=1;
- if (/[0-9]/.test(pw)) score +=2;
- if (/[^A-Za-z0-9]/.test(pw)) score +=3;
- return Math.min(score,10);
+ var score = 0;
+ if (!pw) return 0;
+ if (pw.length >= 12) score += 2; else score += Math.max(0, pw.length - 6);
+ if (/[A-Z]/.test(pw)) score += 2;
+ if (/[a-z]/.test(pw)) score += 1;
+ if (/[0-9]/.test(pw)) score += 2;
+ if (/[^A-Za-z0-9]/.test(pw)) score += 3;
+ return Math.min(score, 10);
  }
  var input = document.getElementById('regPassword');
  var bar = document.getElementById('regPwStrength');
  var feedback = document.getElementById('regPwFeedback');
- if (input) {
+ if (input && bar && feedback) {
  input.addEventListener('input', function (e) {
  var s = scorePassword(e.target.value);
- var pct = Math.round((s /10) *100);
+ var pct = Math.round((s / 10) * 100);
  bar.style.width = pct + '%';
  bar.className = 'progress-bar';
- if (pct <40) { bar.classList.add('bg-danger'); feedback.textContent = 'Weak'; }
- else if (pct <70) { bar.classList.add('bg-warning'); feedback.textContent = 'Fair'; }
+ if (pct < 40) { bar.classList.add('bg-danger'); feedback.textContent = 'Weak'; }
+ else if (pct < 70) { bar.classList.add('bg-warning'); feedback.textContent = 'Fair'; }
  else { bar.classList.add('bg-success'); feedback.textContent = 'Strong'; }
  });
  }
